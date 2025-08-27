@@ -1,4 +1,4 @@
-module github.com/alice-bnuy/errutil
+module github.com/alice-bnuy/errutil v0.1.0
 
 go 1.25.0
 
