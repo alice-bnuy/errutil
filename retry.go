@@ -1,9 +1,10 @@
 package errutil
 
 import (
-	"alicemains/internal/shared/logger"
 	"fmt"
 	"time"
+
+	"github.com/alice-bnuy/logutil"
 )
 
 func (rm *RetryManager) ExecuteWithRetry(operation func() error, operationName string) error {
@@ -12,7 +13,7 @@ func (rm *RetryManager) ExecuteWithRetry(operation func() error, operationName s
 	for attempt := 0; attempt <= rm.maxRetries; attempt++ {
 		if attempt > 0 {
 			delay := rm.calculateDelay(attempt)
-			logger.WithField("attempt", attempt+1).
+			logutil.WithField("attempt", attempt+1).
 				WithField("max_attempts", rm.maxRetries+1).
 				WithField("operation", operationName).
 				WithField("delay", delay).
@@ -23,7 +24,7 @@ func (rm *RetryManager) ExecuteWithRetry(operation func() error, operationName s
 		err := operation()
 		if err == nil {
 			if attempt > 0 {
-				logger.WithField("operation", operationName).
+				logutil.WithField("operation", operationName).
 					WithField("attempts_used", attempt+1).
 					Infof("Operation %s succeeded after %d attempts", operationName, attempt+1)
 			}
@@ -31,7 +32,7 @@ func (rm *RetryManager) ExecuteWithRetry(operation func() error, operationName s
 		}
 
 		lastErr = err
-		logger.WithField("operation", operationName).
+		logutil.WithField("operation", operationName).
 			WithField("attempt", attempt+1).
 			ErrorWithErr(fmt.Sprintf(ErrOnAttempt, attempt+1, operationName), err)
 	}

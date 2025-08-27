@@ -1,20 +1,21 @@
 package errutil
 
 import (
-	"alicemains/internal/shared/logger"
 	"context"
 	"errors"
 	"fmt"
 	"time"
+
+	"github.com/alice-bnuy/logutil"
 )
 
 // ErrorHandler provides utilities for consistent error handling
 type ErrorHandler struct {
-	logger *logger.Logger
+	logger *logutil.Logger
 }
 
 // NewErrorHandler creates a new error handler
-func NewErrorHandler(logger *logger.Logger) *ErrorHandler {
+func NewErrorHandler(logger *logutil.Logger) *ErrorHandler {
 	return &ErrorHandler{
 		logger: logger,
 	}
@@ -160,7 +161,7 @@ func (eh *ErrorHandler) EnsureSuccess(err error, operation string) {
 var GlobalErrorHandler *ErrorHandler
 
 // InitializeGlobalErrorHandler initializes the global error handler
-func InitializeGlobalErrorHandler(logger *logger.Logger) error {
+func InitializeGlobalErrorHandler(logger *logutil.Logger) error {
 	if logger == nil {
 		return errors.New(ErrGlobalLoggerNotInitialized)
 	}
